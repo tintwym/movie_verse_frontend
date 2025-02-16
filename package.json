@@ -5,7 +5,7 @@
   "author": "ISS GDipSA 50 Team 8",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build t&& cd dist && cp index.html 200.html",
+    "build": "vite build",
     "serve": "vite preview"
   },
   "dependencies": {
