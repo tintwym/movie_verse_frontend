@@ -1,101 +1,50 @@
-# MovieVerse Frontend
+# Movie Verse Frontend
 
-This is the frontend application for MovieVerse, built using React.js and Vite.
+React single-page app for **MovieVerse**, built with **Vite** and **React 17**. State uses **Redux** and **redux-saga**; styling includes **Sass** and shared UI libraries (see `package.json`).
 
 ## Prerequisites
 
-Make sure you have the following installed on your system:
-
 - [Node.js](https://nodejs.org/) (LTS recommended)
-- [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- npm or yarn
 
-## Installation
+## Install and run
 
-1. Clone the repository:
-
-   ```sh
-   git clone https://github.com/minnaypyi/movie_verse_frontend.git
-   cd movie_verse_frontend
-   ```
-
-2. Install dependencies:
-
-   Using npm:
-   ```sh
-   npm install
-   ```
-   
-   OR using yarn:
-   ```sh
-   yarn install
-   ```
-
-## Running the Application
-
-To start the development server, run:
-
-Using npm:
-```sh
+```bash
+cd movie_verse_frontend
+npm install
 npm run dev
 ```
 
-OR using yarn:
-```sh
-yarn dev
-```
+The dev server URL is printed in the terminal (Vite defaults apply unless overridden in `vite.config.js`).
 
-This will start the application at `http://localhost:3000/`.
+## Scripts
 
-## Building for Production
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Development server |
+| `npm run build` | Production build to `dist/` |
+| `npm run serve` | Preview the production build (`vite preview`) |
 
-To create a production build, run:
+## Environment variables
 
-Using npm:
-```sh
-npm run build
-```
+Create a `.env` file in this directory (do **not** commit real API keys). Vite exposes only variables prefixed with `VITE_`:
 
-OR using yarn:
-```sh
-yarn build
-```
+| Variable | Purpose |
+|----------|---------|
+| `VITE_BACKEND_URL` | Base URL for the Spring backend API |
+| `VITE_TMDB_KEY` | [TMDB](https://www.themoviedb.org/) API key |
+| `VITE_TMDB_TOKEN` | TMDB read access JWT, if your code uses bearer auth |
 
-The production-ready files will be generated in the `dist` directory.
+See `.env.example` for placeholders. Use your own TMDB credentials from the TMDB developer dashboard.
 
-## Serving the Production Build
+## Docker
 
-To preview the production build, run:
+A `Dockerfile` and `nginx.conf` are included for containerized deployment of the built static assets.
 
-Using npm:
-```sh
-npm run serve
-```
+## Source layout
 
-OR using yarn:
-```sh
-yarn serve
-```
+- `src/` — application code (`@app` → `src` via `vite.config.js`)
 
-## Environment Variables
+This project is part of the **Movie Verse** workspace; see the root `README.md` for sibling services (Android, Spring Boot, ML).
 
-You can configure environment variables in a `.env` file:
-
-```
-VITE_BACKEND_URL=localhost // Change this according to your backend URL
-VITE_TMDB_KEY=b6e697da8917a9bf6035e0ee29c76732 // Change this according to your TMDB API Key
-VITE_TMDB_TOKEN=eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJiNmU2OTdkYTg5MTdhOWJmNjAzNWUwZWUyOWM3NjczMiIsIm5iZiI6MTczODY1MzQ3MS44OCwic3ViIjoiNjdhMWJmMWZlZWE4OWFkZjA5MDJlZWNkIiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.f4LTSR993hRHTveYhNUmxTo0awVRaXmFMoRP7uwozb8 // Change this according to your TMDB token
-```
-
-## Additional Commands
-
-- **Linting**: Run `npm run lint` or `yarn lint` to check code quality.
-- **Testing**: Run `npm test` or `yarn test` to execute tests.
-
-## License
-
-This project is licensed under the [ISS GDip SA 59 Team 8](LICENSE).
-
-## Author
-
-Developed by ISS GDip SA 59 Team 8.
-
+Additional team notes may appear in [`ReadMe.md`](ReadMe.md).
