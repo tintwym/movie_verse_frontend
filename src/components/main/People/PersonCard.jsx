@@ -13,7 +13,6 @@ const PersonCard = ({ data }) => {
   const tmdbPosterPath = 'https://image.tmdb.org/t/p/w185_and_h278_face/';
 
   const onClickCard = (e) => {
-    console.log('Actor ID:', data?.id);
     // Prevent clicking of cards if loading
     if (isLoading) {
       e.preventDefault();

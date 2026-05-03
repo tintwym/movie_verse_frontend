@@ -18,8 +18,6 @@ const sliderSettings = {
 };
 
 const MoviesSlider = ({ movies }) => {
-  console.log('MOVIES -------', movies);
-
   return (
     <div className="movie__slider">
       {movies.length === 0 ? (

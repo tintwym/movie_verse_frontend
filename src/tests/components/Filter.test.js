@@ -52,8 +52,5 @@ describe('Test the filter component', () => {
       .find('#yearFilter')
       .simulate('change', { target: { value: '2020' } });
 
-    // expect(wrapper.find(Filter).state.y).toBe('2020');
-    console.log(store.getState());
-    // expect(store.getState()._filter.tv.year).toBe('2020');
   });
 });

@@ -15,9 +15,8 @@ const BackdropCard = ({ backdrop }) => {
 
     downloadFileUrl(`${tmdbPosterBase + file_path}`)
       .then(() => setIfDownloading(false))
-      .catch((e) => {
+      .catch(() => {
         setIfDownloading(false);
-        console.log(e);
       });
   };
 

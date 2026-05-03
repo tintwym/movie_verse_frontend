@@ -12,16 +12,13 @@ import {
   Route,
   Switch,
   useLocation,
-  useHistory,
 } from "react-router-dom";
 import { Slide, ToastContainer } from "react-toastify";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 const MainContent = () => {
-  const location = useLocation(); // Get current route
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const history = useHistory();
+  const location = useLocation();
 
   useEffect(() => {
     const verifyToken = async () => {
@@ -29,8 +26,6 @@ const MainContent = () => {
       const username = localStorage.getItem("username");
 
       if (!token || !username) {
-        //console.log("No token found. Redirecting to login.");
-        //history.push("/login");
         return;
       }
 
@@ -48,25 +43,15 @@ const MainContent = () => {
         );
 
         if (!response.ok) {
-          console.log("Token is invalid. Redirecting to login.");
           localStorage.removeItem("authToken");
           localStorage.removeItem("username");
-          //history.push("/login");
-        } else {
-          console.log("Token is valid.");
-          setIsAuthenticated(true);
         }
       } catch (error) {
         console.error("Error verifying token:", error);
-        //history.push("/login");
       }
     };
     verifyToken();
-  }, [history]); // Runs when `navigate` changes (on page load)
-
-  // if (!isAuthenticated) {
-  //   return <div>Loading...</div>; // Show loading screen while checking authentication
-  // }
+  }, []);
 
   return (
     <main id="main" key={location.pathname}>

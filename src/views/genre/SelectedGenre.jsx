@@ -9,7 +9,6 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 const SelectedGenre = ({ match }) => {
-  console.log('SelectedGenre component rendered'); // Check if component is being rendered
   const { currentGenre, isLoading } = useSelector(state => ({
     currentGenre: state.genre.current,
     isLoading: state.misc.isLoading,
@@ -17,11 +16,8 @@ const SelectedGenre = ({ match }) => {
   const { currentPage, setCurrentPage } = usePageSaver();
   const dispatch = useDispatch();
 
-  console.log('Current Genre:', currentGenre);
-
   useDocumentTitle('Genres | MOVX');
   useEffect(() => {
-    console.log('Dispatching fetchGenreCategory');
     dispatch(fetchGenreCategory(match.params.id, currentPage));
   }, []);
 

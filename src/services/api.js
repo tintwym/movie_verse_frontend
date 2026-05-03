@@ -160,11 +160,9 @@ export const getMovieReviews = async (mediaType, id) => {
   try {
     // First, check if the reviews exist in your database
     const databaseReviewsResponse = await checkReviewsInDatabase(id);
-    console.log(databaseReviewsResponse);
     const tmdbFormattedReviews = mapBackendReviewsToTmdbFormat(
       databaseReviewsResponse.data
     );
-    console.log(tmdbFormattedReviews);
     if (
       tmdbFormattedReviews.results &&
       tmdbFormattedReviews.results.length > 0
@@ -176,7 +174,6 @@ export const getMovieReviews = async (mediaType, id) => {
       return httpRequest({
         url: `/${mediaType}/${id}/reviews`,
       });
-      //return tmdbReviewsResponse.data.results;
     }
   } catch (error) {
     console.error("Error fetching reviews:", error);
@@ -185,14 +182,7 @@ export const getMovieReviews = async (mediaType, id) => {
   }
 };
 
-// export const getMovieReviews = (mediaType, id) => {
-//   return httpRequest({
-//     url: `/${mediaType}/${id}/reviews`,
-//   });
-// };
-
 export const search = (category, query, page = 1) => {
-  console.log("Searching:", { category, query, page }); // 🔥 Check the params before sending
   return httpRequest({
     //url: `/search/${category}`,
     url: `/search/${category}`,
@@ -210,7 +200,6 @@ export const search = (category, query, page = 1) => {
     //params: { query, page }
   })
     .then((res) => {
-      console.log("Search Response:", res); // 🔥 Log the response
       return res;
     })
     .catch((err) => {
@@ -239,9 +228,7 @@ export const getSelectedPersonCasting = async (id) => {
 };
 
 export const getRecommendedMovies = async () => {
-  try {
-    // Fetch recommended movie IDs from your backend
-    console.log("Requesting:");
+    try {
     const response = await axios.get(
       `http://${backendurl}:8080/api/user-interactions/recommend`,
       {
@@ -251,9 +238,7 @@ export const getRecommendedMovies = async () => {
         },
       }
     );
-    console.log("Response Data:", response.data);
     const movieIds = response.data;
-    console.log(movieIds);
     if (!Array.isArray(movieIds)) {
       console.error("Invalid response format, expected an array:", movieIds);
       return [];
@@ -274,7 +259,6 @@ export const getRecommendedMovies = async () => {
     // Wait for all requests to complete
     const movieDetails = await Promise.all(movieDetailsPromises);
 
-    console.log("Fetched Movie Details:", movieDetails);
     return {
       page: 1, // Assuming only one page
       results: movieDetails, // Movie details array

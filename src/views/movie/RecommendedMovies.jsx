@@ -39,7 +39,6 @@ const RecommendedMovies = () => {
       setCurrentPage(page);
     }
   };
-  console.log(recommendedMovies);
   return (
     <Container>
       <div className="movie__header">
@@ -48,23 +47,6 @@ const RecommendedMovies = () => {
           <h3>{numberWithCommas(recommendedMovies?.total_results || 0)} Movies</h3>
         </div>
       </div>
-{/* 
-        <MovieList
-          movies={recommendedMovies?.results || []}
-          templateCount={10}
-        />
-      
-      {recommendedMovies && (
-        <CustomPagination
-          activePage={recommendedMovies.page}
-          itemsCountPerPage={1}
-          onChange={handlePageChange}
-          pageRangeDisplayed={10}
-          totalItemsCount={recommendedMovies.total_pages}
-          totalPage={recommendedMovies.total_pages}
-          infiniteScroll={true}
-        />
-      )} */}
 
       {/* Show a message if there are no recommended movies */}
       {recommendedMovies?.results?.length === 0 ? (

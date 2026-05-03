@@ -65,7 +65,6 @@ const useWatched = () => {
 
   // Optionally, load the watched movies from the backend (for persistence)
   useEffect(() => {
-    console.log("Fetching watched movies from backend...");
     const token = localStorage.getItem("authToken");
     const fetchWatchedMovies = async () => {
       try {
@@ -75,7 +74,6 @@ const useWatched = () => {
             headers: { Authorization: `Bearer ${token}` },
           }
         );
-        //console.log("API Response:", response.data); // Debugging
         setWatchedMovies(response.data);
       } catch (error) {
         console.error("Error fetching watched movies", error);

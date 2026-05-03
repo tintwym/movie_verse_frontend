@@ -74,8 +74,8 @@ const MovieOverview = () => {
           if (ratingResponse.data) {
             setRating(ratingResponse.data.rating || 0); // Assuming the rating is in the response
           }
-        } catch (error) {
-          console.warn("No rating found or error fetching rating:", error);
+        } catch {
+          // No rating yet or request failed — keep default rating UI
         }
         try {
         // Fetch the review
@@ -159,7 +159,6 @@ const MovieOverview = () => {
       toast.warn("Nothing to submit! Please enter a rating or review.");
     }
 
-      console.log("Review & Rating submitted!");
       setIsModalOpen(false);
     } catch (error) {
       console.error("Error submitting review/rating:", error);

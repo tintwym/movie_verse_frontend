@@ -19,10 +19,8 @@ const MovieSliderItem = ({ movie }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const genres = useSelector((state) => state.genre.genres);
-  console.log("Genres from Redux:", genres);
   useEffect(() => {
     if (genres.length === 0) {
-      console.log("🚀 Dispatching fetchGenres()...");
       dispatch(fetchGenres());
     }
   }, [dispatch, genres.length]);

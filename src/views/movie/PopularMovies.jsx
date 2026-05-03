@@ -19,7 +19,6 @@ const PopularMovies = () => {
   useDocumentTitle('Popular Movies | MOVX');
   useEffect(() => {
     if (!popularMovies) {
-      console.log(currentPage);
       dispatch(fetchPopularMovies(currentPage));
     }
   }, [currentPage, popularMovies, dispatch]);

@@ -43,8 +43,6 @@ export default function Login() {
         // Save the token in localStorage
         localStorage.setItem("authToken", data.token);
         localStorage.setItem("username", username);
-        // Optionally, redirect to another page after successful login
-        console.log("Login successful:", data);
         if (location.pathname === "/login") {
           // If the user is on the login page, redirect to home
           history.push("/"); // Redirect to home page (or any other page)

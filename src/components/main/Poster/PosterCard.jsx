@@ -15,9 +15,8 @@ const PosterCard = ({ poster }) => {
 
     downloadFileUrl(`${TMDB_POSTER_BASE + file_path}`)
       .then(() => setIfDownloading(false))
-      .catch((e) => {
+      .catch(() => {
         setIfDownloading(false);
-        console.log(e);
       });
   };
 
