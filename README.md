@@ -13,8 +13,8 @@ Modern **Next.js 16 + React 19 + TypeScript** frontend for MovieVerse with a ren
 ## Getting Started
 
 ```bash
-cp .env.example .env.local
-# Set NEXT_PUBLIC_TMDB_API_KEY and NEXT_PUBLIC_BACKEND_URL
+cp .env.example .env
+# Set TMDB_API_KEY and NEXT_PUBLIC_BACKEND_URL
 
 npm install
 npm run dev
@@ -27,9 +27,9 @@ Open [http://localhost:3000](http://localhost:3000).
 | Variable | Description |
 |----------|-------------|
 | `NEXT_PUBLIC_BACKEND_URL` | Spring Boot API (default `http://localhost:8080`) |
-| `NEXT_PUBLIC_TMDB_API_KEY` | TMDB API key (**required for movies to load**) |
-| `NEXT_PUBLIC_TMDB_TOKEN` | TMDB bearer token (optional) |
-| `NEXT_PUBLIC_SITE_URL` | Public site URL for Open Graph (e.g. `https://your-app.vercel.app`) |
+| `TMDB_API_KEY` | TMDB API key (preferred; used by `/api/tmdb`) |
+| `NEXT_PUBLIC_TMDB_API_KEY` | Optional client fallback |
+| `NEXT_PUBLIC_SITE_URL` | Public site URL for Open Graph |
 
 ## Deploy (Vercel)
 
