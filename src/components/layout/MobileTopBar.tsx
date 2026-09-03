@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Film, Search, Sun, Moon } from "lucide-react";
-import { useAuth } from "@/contexts/AuthProvider";
 import { useTheme } from "@/contexts/ThemeProvider";
 import { cn } from "@/lib/utils";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 
 export function MobileTopBar() {
   const pathname = usePathname();
@@ -37,6 +37,7 @@ export function MobileTopBar() {
         </Link>
 
         <div className="flex items-center gap-1">
+          <NotificationBell />
           <button
             type="button"
             onClick={() => router.push(isSearch ? "/" : "/search")}

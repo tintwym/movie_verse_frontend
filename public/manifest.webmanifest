@@ -6,7 +6,8 @@
   "display": "standalone",
   "background_color": "#050510",
   "theme_color": "#050510",
-  "orientation": "portrait-primary",
+  "orientation": "any",
+  "categories": ["entertainment", "movies"],
   "icons": [
     {
       "src": "/icon.svg",

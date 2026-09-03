@@ -13,6 +13,8 @@ import { tmdbApi } from "@/lib/api/tmdb";
 import { posterUrl } from "@/lib/utils";
 import type { Person } from "@/lib/types";
 
+export const dynamic = "force-dynamic";
+
 type SearchType = "movies" | "people" | "tv";
 
 interface Props {

@@ -4,6 +4,8 @@ import { tmdbApi } from "@/lib/api/tmdb";
 import { movieTitle } from "@/lib/types";
 import { notFound } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   params: Promise<{ id: string }>;
 }

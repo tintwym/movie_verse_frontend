@@ -19,6 +19,7 @@ import { useAuth } from "@/contexts/AuthProvider";
 import { useTheme } from "@/contexts/ThemeProvider";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/Button";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -32,7 +33,7 @@ const navLinks = [
 export function DesktopNavbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { isLoggedIn, username, logout } = useAuth();
+  const { isLoggedIn, username, isAdmin, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -138,6 +139,7 @@ export function DesktopNavbar() {
         </form>
 
         <div className="flex items-center gap-2">
+          <NotificationBell />
           <button
             type="button"
             onClick={toggleTheme}
@@ -192,6 +194,22 @@ export function DesktopNavbar() {
                   >
                     <Sparkles className="h-4 w-4" /> Recommended
                   </Link>
+                  <Link
+                    href="/notifications"
+                    className="flex items-center gap-2 px-4 py-3 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Notifications
+                  </Link>
+                  {isAdmin && (
+                    <Link
+                      href="/admin"
+                      className="flex items-center gap-2 px-4 py-3 text-sm text-zinc-300 hover:bg-white/5 hover:text-white"
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      Admin
+                    </Link>
+                  )}
                   <button
                     onClick={() => {
                       logout();

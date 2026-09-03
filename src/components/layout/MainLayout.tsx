@@ -3,6 +3,7 @@ import { MobileTopBar } from "@/components/layout/MobileTopBar";
 import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 import { Footer } from "@/components/layout/Footer";
 import { AuthProvider } from "@/contexts/AuthProvider";
+import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,6 +14,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
         {children}
       </main>
       <MobileBottomNav />
+      <InstallPrompt />
       <div className="hidden lg:block">
         <Footer />
       </div>

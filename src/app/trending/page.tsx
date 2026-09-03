@@ -3,6 +3,8 @@ import { tmdbApi } from "@/lib/api/tmdb";
 
 export const metadata = { title: "Trending" };
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   searchParams: Promise<{ page?: string }>;
 }

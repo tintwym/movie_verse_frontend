@@ -6,6 +6,12 @@ import type {
   UserProfile,
   MovieReview,
   MovieRating,
+  CommunityReview,
+  AppNotification,
+  FollowedPerson,
+  TvProgressItem,
+  AdminUser,
+  AdminReview,
 } from "@/lib/types";
 
 const baseURL = process.env.NEXT_PUBLIC_BACKEND_URL ?? "http://localhost:8080";
@@ -34,6 +40,7 @@ backend.interceptors.response.use(
     if (error.response?.status === 401 && typeof window !== "undefined") {
       localStorage.removeItem("authToken");
       localStorage.removeItem("username");
+      localStorage.removeItem("userRole");
     }
     return Promise.reject(error);
   }
@@ -84,6 +91,8 @@ export const backendApi = {
       backend.get<{ tmdbMovieId: number }[]>("/api/user-interactions/getuserinteractions"),
   },
   reviews: {
+    getForMovie: (movieId: number) =>
+      backend.get<CommunityReview[]>(`/api/reviews/${movieId}`),
     getUserReview: (movieId: number) =>
       backend.get<MovieReview>(`/api/reviews/${movieId}/user`),
     submitReview: (movieId: number, reviewText: string, isEdit: boolean) =>
@@ -99,5 +108,59 @@ export const backendApi = {
       backend.get<MovieRating>(`/api/ratings/${movieId}/user`),
     submitRating: (movieId: number, rating: number) =>
       backend.post(`/api/ratings/${movieId}`, null, { params: { rating } }),
+    getAverage: (movieId: number) =>
+      backend.get<number>(`/api/ratings/${movieId}/average`),
+  },
+  notifications: {
+    list: () => backend.get<AppNotification[]>("/api/notifications"),
+    unreadCount: () =>
+      backend.get<{ count: number }>("/api/notifications/unread-count"),
+    markRead: (id: string) => backend.post(`/api/notifications/${id}/read`),
+    markAllRead: () => backend.post("/api/notifications/read-all"),
+  },
+  follows: {
+    list: () => backend.get<FollowedPerson[]>("/api/follows"),
+    status: (personId: number) =>
+      backend.get<{ following: boolean }>(`/api/follows/${personId}/status`),
+    follow: (payload: {
+      tmdbPersonId: number;
+      personName: string;
+      profilePath?: string | null;
+    }) => backend.post<FollowedPerson>("/api/follows", payload),
+    unfollow: (personId: number) => backend.delete(`/api/follows/${personId}`),
+    checkCredits: (
+      credits: {
+        tmdbPersonId: number;
+        creditId: number;
+        title: string;
+        mediaType: string;
+        releaseDate?: string;
+      }[]
+    ) => backend.post<{ created: number }>("/api/follows/check-credits", credits),
+  },
+  tvProgress: {
+    list: (tvId: number) =>
+      backend.get<TvProgressItem[]>(`/api/tv-progress/${tvId}`),
+    upsert: (payload: {
+      tmdbTvId: number;
+      seasonNumber: number;
+      episodeNumber: number;
+      watched: boolean;
+    }) => backend.put<TvProgressItem>("/api/tv-progress", payload),
+    markSeason: (tvId: number, seasonNumber: number, episodeNumbers: number[]) =>
+      backend.post(`/api/tv-progress/${tvId}/season/${seasonNumber}`, {
+        episodeNumbers,
+      }),
+  },
+  admin: {
+    stats: () =>
+      backend.get<{ userCount: number; reviewCount: number }>("/api/admin/stats"),
+    users: () => backend.get<AdminUser[]>("/api/admin/users"),
+    reviews: () => backend.get<AdminReview[]>("/api/admin/reviews"),
+    deleteUser: (userId: string) => backend.delete(`/api/admin/users/${userId}`),
+    deleteReview: (userId: string, tmdbMovieId: number) =>
+      backend.delete("/api/admin/reviews", {
+        params: { userId, tmdbMovieId },
+      }),
   },
 };

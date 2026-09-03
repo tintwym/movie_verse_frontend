@@ -3,9 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Heart, Eye, Star, ArrowLeft, Bookmark } from "lucide-react";
+import { Heart, Eye, Star, ArrowLeft, Bookmark, Play } from "lucide-react";
 import type { Movie, CastMember } from "@/lib/types";
-import { movieTitle } from "@/lib/types";
+import { movieTitle, pickTrailer } from "@/lib/types";
 import { backdropUrl, posterUrl, getYear } from "@/lib/utils";
 import { backendApi } from "@/lib/api/backend";
 import { useAuth } from "@/contexts/AuthProvider";
@@ -15,6 +15,12 @@ import { TruncateText } from "@/components/ui/TruncateText";
 import { AnimateIn } from "@/components/ui/AnimateIn";
 import { Reveal } from "@/components/ui/Reveal";
 import { MovieRow } from "@/components/movies/MovieRow";
+import { TrailerModal } from "@/components/movies/TrailerModal";
+import { ShareButton } from "@/components/movies/ShareButton";
+import { AddToListButton } from "@/components/movies/AddToListButton";
+import { CommunityReviews } from "@/components/movies/CommunityReviews";
+import { TvSeasonTracker } from "@/components/tv/TvSeasonTracker";
+import { recordRecentlyViewed } from "@/hooks/useRecentlyViewed";
 
 interface Props {
   movie: Movie;
@@ -26,12 +32,19 @@ interface Props {
 export function MovieDetailClient({ movie, cast, similar, mediaType = "movie" }: Props) {
   const { isLoggedIn } = useAuth();
   const title = movieTitle(movie);
+  const trailer = pickTrailer(movie);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isWatched, setIsWatched] = useState(false);
   const [isWatchlist, setIsWatchlist] = useState(false);
   const [rating, setRating] = useState(0);
   const [review, setReview] = useState("");
   const [message, setMessage] = useState("");
+  const [showTrailer, setShowTrailer] = useState(false);
+  const [reviewRefresh, setReviewRefresh] = useState(0);
+
+  useEffect(() => {
+    recordRecentlyViewed(movie, mediaType);
+  }, [movie, mediaType]);
 
   useEffect(() => {
     if (!isLoggedIn) return;
@@ -85,10 +98,19 @@ export function MovieDetailClient({ movie, cast, similar, mediaType = "movie" }:
       await backendApi.reviews.submitReview(movie.id, review, false);
     }
     setMessage("Saved!");
+    setReviewRefresh((n) => n + 1);
   };
 
   return (
     <div>
+      {showTrailer && trailer && (
+        <TrailerModal
+          youtubeKey={trailer.key}
+          title={title}
+          onClose={() => setShowTrailer(false)}
+        />
+      )}
+
       <section className="relative h-[50vh] min-h-[360px] overflow-hidden">
         <Image
           src={backdropUrl(movie.backdrop_path ?? movie.poster_path)}
@@ -105,6 +127,16 @@ export function MovieDetailClient({ movie, cast, similar, mediaType = "movie" }:
         >
           <ArrowLeft className="h-4 w-4" /> Back
         </Link>
+        {trailer && (
+          <button
+            type="button"
+            onClick={() => setShowTrailer(true)}
+            className="absolute bottom-8 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-zinc-900 shadow-lg transition hover:scale-105"
+          >
+            <Play className="h-4 w-4 fill-current" />
+            Watch Trailer
+          </button>
+        )}
       </section>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-8">
@@ -132,7 +164,7 @@ export function MovieDetailClient({ movie, cast, similar, mediaType = "movie" }:
             <AnimateIn delay={280}>
               <div className="flex flex-wrap items-center gap-3 text-sm text-zinc-400">
                 {movie.release_date && <span>{getYear(movie.release_date)}</span>}
-              {movie.first_air_date && <span>{getYear(movie.first_air_date)}</span>}
+                {movie.first_air_date && <span>{getYear(movie.first_air_date)}</span>}
                 {movie.runtime && <span>{movie.runtime} min</span>}
                 {movie.vote_average != null && (
                   <span className="flex items-center gap-1 text-yellow-400">
@@ -155,28 +187,39 @@ export function MovieDetailClient({ movie, cast, similar, mediaType = "movie" }:
               <p className="max-w-3xl text-zinc-300 leading-relaxed">{movie.overview}</p>
             </AnimateIn>
 
-            {isLoggedIn && (
-              <div className="flex flex-wrap gap-3 pt-2">
-                <Button
-                  variant={isFavorite ? "danger" : "outline"}
-                  onClick={toggleFavorite}
-                >
-                  <Heart className={`h-4 w-4 ${isFavorite ? "fill-current" : ""}`} />
-                  {isFavorite ? "Favorited" : "Favorite"}
+            <div className="flex flex-wrap gap-3 pt-2">
+              {trailer && (
+                <Button onClick={() => setShowTrailer(true)}>
+                  <Play className="h-4 w-4 fill-current" />
+                  Trailer
                 </Button>
-                <Button variant={isWatched ? "secondary" : "outline"} onClick={toggleWatched}>
-                  <Eye className="h-4 w-4" />
-                  {isWatched ? "Watched" : "Mark Watched"}
-                </Button>
-                <Button
-                  variant={isWatchlist ? "secondary" : "outline"}
-                  onClick={toggleWatchlist}
-                >
-                  <Bookmark className={`h-4 w-4 ${isWatchlist ? "fill-current" : ""}`} />
-                  {isWatchlist ? "On Watchlist" : "Watchlist"}
-                </Button>
-              </div>
-            )}
+              )}
+              <ShareButton title={title} />
+              {mediaType === "movie" && <AddToListButton movieId={movie.id} />}
+              {isLoggedIn && (
+                <>
+                  <Button
+                    variant={isFavorite ? "danger" : "outline"}
+                    onClick={toggleFavorite}
+                  >
+                    <Heart className={`h-4 w-4 ${isFavorite ? "fill-current" : ""}`} />
+                    {isFavorite ? "Favorited" : "Favorite"}
+                  </Button>
+                  <Button variant={isWatched ? "secondary" : "outline"} onClick={toggleWatched}>
+                    <Eye className="h-4 w-4" />
+                    {isWatched ? "Watched" : "Mark Watched"}
+                  </Button>
+                  <Button
+                    variant={isWatchlist ? "secondary" : "outline"}
+                    onClick={toggleWatchlist}
+                  >
+                    <Bookmark className={`h-4 w-4 ${isWatchlist ? "fill-current" : ""}`} />
+                    {isWatchlist ? "On Watchlist" : "Watchlist"}
+                  </Button>
+                </>
+              )}
+            </div>
+            {message && <p className="text-sm text-indigo-400">{message}</p>}
 
             {isLoggedIn && mediaType === "movie" && (
               <div className="glass-card max-w-xl space-y-4 p-6">
@@ -202,7 +245,6 @@ export function MovieDetailClient({ movie, cast, similar, mediaType = "movie" }:
                   className="w-full rounded-xl border border-white/10 bg-white/5 p-3 text-white placeholder:text-zinc-500 outline-none focus:border-indigo-500/50"
                 />
                 <Button onClick={submitReview}>Save Review</Button>
-                {message && <p className="text-sm text-indigo-400">{message}</p>}
               </div>
             )}
           </div>
@@ -219,18 +261,18 @@ export function MovieDetailClient({ movie, cast, similar, mediaType = "movie" }:
                     className="group flex w-28 flex-shrink-0 flex-col items-center text-center"
                   >
                     <div className="relative h-28 w-28 overflow-hidden rounded-full bg-zinc-800 ring-2 ring-white/10 transition duration-300 group-hover:scale-105 group-hover:ring-indigo-500/40">
-                    <Image
-                      src={
-                        person.profile_path
-                          ? `https://image.tmdb.org/t/p/w185${person.profile_path}`
-                          : "/placeholder-poster.svg"
-                      }
-                      alt={person.name}
-                      fill
-                      className="object-cover"
-                      sizes="112px"
-                    />
-                  </div>
+                      <Image
+                        src={
+                          person.profile_path
+                            ? `https://image.tmdb.org/t/p/w185${person.profile_path}`
+                            : "/placeholder-poster.svg"
+                        }
+                        alt={person.name}
+                        fill
+                        className="object-cover"
+                        sizes="112px"
+                      />
+                    </div>
                     <p className="mt-2 text-sm font-medium text-white">{person.name}</p>
                     <p className="text-xs text-zinc-500">{person.character}</p>
                   </Link>
@@ -238,6 +280,14 @@ export function MovieDetailClient({ movie, cast, similar, mediaType = "movie" }:
               ))}
             </div>
           </Reveal>
+        )}
+
+        {mediaType === "tv" && (
+          <TvSeasonTracker tvId={movie.id} seasons={movie.seasons} />
+        )}
+
+        {mediaType === "movie" && (
+          <CommunityReviews movieId={movie.id} refreshKey={reviewRefresh} />
         )}
 
         {similar.length > 0 && (

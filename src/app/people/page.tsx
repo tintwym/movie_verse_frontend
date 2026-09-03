@@ -10,6 +10,8 @@ import type { Person } from "@/lib/types";
 
 export const metadata = { title: "People" };
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   searchParams: Promise<{ page?: string }>;
 }
@@ -26,7 +28,7 @@ export default async function PeoplePage({ searchParams }: Props) {
         <PageHeader
           title="Popular People"
           subtitle="Actors and filmmakers trending on TMDB"
-          meta={`Page ${data.page} of ${data.total_pages}`}
+          meta={`Page ${data.page} of ${Math.max(data.total_pages, 1)}`}
         />
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
           {data.results.map((person: Person) => (
@@ -52,7 +54,7 @@ export default async function PeoplePage({ searchParams }: Props) {
         </div>
         <Pagination
           currentPage={data.page}
-          totalPages={data.total_pages}
+          totalPages={Math.max(data.total_pages, 1)}
           buildHref={buildHref}
         />
       </div>

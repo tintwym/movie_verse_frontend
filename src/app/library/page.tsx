@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Heart, Bookmark, Eye, Sparkles, LogIn } from "lucide-react";
 import { MainLayout } from "@/components/layout/MainLayout";
+import { CustomListsPanel } from "@/components/library/CustomListsPanel";
 import { useAuth } from "@/contexts/AuthProvider";
 import { Button } from "@/components/ui/Button";
 
@@ -57,26 +58,29 @@ export default function LibraryPage() {
             </Button>
           </div>
         ) : (
-          <div className="mt-6 grid gap-3 sm:mt-10 sm:grid-cols-2 lg:grid-cols-4">
-            {items.map((item) => {
-              const Icon = item.icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`group flex items-center gap-4 rounded-2xl border border-white/10 bg-gradient-to-br ${item.color} p-4 transition active:scale-[0.98] sm:p-5`}
-                >
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/10">
-                    <Icon className="h-6 w-6 text-white" />
-                  </span>
-                  <div>
-                    <p className="font-semibold text-white">{item.label}</p>
-                    <p className="text-xs text-zinc-400">{item.description}</p>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+          <>
+            <div className="mt-6 grid gap-3 sm:mt-10 sm:grid-cols-2 lg:grid-cols-4">
+              {items.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`group flex items-center gap-4 rounded-2xl border border-white/10 bg-gradient-to-br ${item.color} p-4 transition active:scale-[0.98] sm:p-5`}
+                  >
+                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white/10">
+                      <Icon className="h-6 w-6 text-white" />
+                    </span>
+                    <div>
+                      <p className="font-semibold text-white">{item.label}</p>
+                      <p className="text-xs text-zinc-400">{item.description}</p>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+            <CustomListsPanel />
+          </>
         )}
       </div>
     </MainLayout>

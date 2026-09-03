@@ -35,12 +35,12 @@ export async function CatalogPage({
         <PageHeader
           title={title}
           subtitle={subtitle}
-          meta={`${data.total_results.toLocaleString()} titles · Page ${data.page} of ${data.total_pages}`}
+          meta={`${data.total_results.toLocaleString()} titles · Page ${data.page} of ${Math.max(data.total_pages, 1)}`}
         />
         <MovieGrid movies={data.results} mediaType={mediaType} />
         <Pagination
           currentPage={data.page}
-          totalPages={data.total_pages}
+          totalPages={Math.max(data.total_pages, 1)}
           buildHref={buildHref}
         />
       </div>

@@ -5,6 +5,8 @@ import { Pagination } from "@/components/ui/Pagination";
 import { parsePageParam } from "@/lib/parsePage";
 import { tmdbApi } from "@/lib/api/tmdb";
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   searchParams: Promise<{ name?: string; page?: string }>;
   params: Promise<{ id: string }>;

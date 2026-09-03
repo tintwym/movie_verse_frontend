@@ -2,9 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { MovieGrid } from "@/components/movies/MovieGrid";
+import { FollowPersonButton } from "@/components/people/FollowPersonButton";
 import { tmdbApi } from "@/lib/api/tmdb";
 import { posterUrl } from "@/lib/utils";
 import { notFound } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -54,6 +57,11 @@ export default async function PersonPage({ params }: Props) {
               {person.place_of_birth && (
                 <p className="text-sm text-zinc-400">{person.place_of_birth}</p>
               )}
+              <FollowPersonButton
+                personId={person.id}
+                personName={person.name}
+                profilePath={person.profile_path}
+              />
               <p className="max-w-2xl text-zinc-300 leading-relaxed">
                 {person.biography || "No biography available."}
               </p>

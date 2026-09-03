@@ -32,6 +32,20 @@ export const metadata: Metadata = {
   description:
     "Browse trending movies, get personalized recommendations, and manage your watchlist with MovieVerse.",
   applicationName: "MovieVerse",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  openGraph: {
+    type: "website",
+    siteName: "MovieVerse",
+    title: "MovieVerse — Discover Movies",
+    description:
+      "Browse trending movies, get personalized recommendations, and manage your watchlist.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "MovieVerse — Discover Movies",
+    description:
+      "Browse trending movies, get personalized recommendations, and manage your watchlist.",
+  },
   icons: {
     icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
     apple: [{ url: "/apple-icon.svg", type: "image/svg+xml" }],
