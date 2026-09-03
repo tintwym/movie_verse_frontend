@@ -52,22 +52,16 @@ body {
     radial-gradient(at 50% 100%, rgba(59, 130, 246, 0.05) 0, transparent 50%);
 }
 
-[data-theme="light"] .text-white {
-  color: #0f172a;
-}
-
+[data-theme="light"] .text-zinc-200,
 [data-theme="light"] .text-zinc-300,
 [data-theme="light"] .text-zinc-400,
 [data-theme="light"] .text-zinc-500 {
   color: #64748b;
 }
 
-[data-theme="light"] .bg-\[\#050510\]\/80 {
-  background-color: rgba(248, 250, 252, 0.9);
-}
-
 [data-theme="light"] .border-white\/5,
-[data-theme="light"] .border-white\/10 {
+[data-theme="light"] .border-white\/10,
+[data-theme="light"] .border-white\/20 {
   border-color: rgba(15, 23, 42, 0.1);
 }
 
@@ -77,8 +71,9 @@ body {
 }
 
 [data-theme="light"] .bg-\[\#050510\]\/95,
-[data-theme="light"] .bg-\[\#050510\]\/90 {
-  background-color: rgba(248, 250, 252, 0.95);
+[data-theme="light"] .bg-\[\#050510\]\/90,
+[data-theme="light"] .bg-\[\#050510\]\/80 {
+  background-color: color-mix(in srgb, var(--background) 90%, transparent);
 }
 
 /* Mobile touch polish */

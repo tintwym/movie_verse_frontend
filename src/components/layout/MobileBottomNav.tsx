@@ -48,7 +48,7 @@ export function MobileBottomNav() {
 
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-[#050510]/95 backdrop-blur-xl lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-background/95 backdrop-blur-xl lg:hidden"
       aria-label="Mobile navigation"
     >
       <div

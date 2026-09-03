@@ -33,7 +33,10 @@ export const metadata: Metadata = {
     "Browse trending movies, get personalized recommendations, and manage your watchlist with MovieVerse.",
   applicationName: "MovieVerse",
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000"
+    (process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000").replace(
+      /\/$/,
+      ""
+    )
   ),
   openGraph: {
     type: "website",
@@ -66,8 +69,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full`} suppressHydrationWarning>
-      <body className="min-h-full flex flex-col bg-mesh antialiased">
+    <html
+      lang="en"
+      data-theme="dark"
+      className={`${geistSans.variable} ${geistMono.variable} h-full`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("mv_theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}})();`,
+          }}
+        />
+      </head>
+      <body className="flex min-h-full flex-col bg-mesh antialiased">
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

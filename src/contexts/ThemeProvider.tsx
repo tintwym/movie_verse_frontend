@@ -21,15 +21,12 @@ const STORAGE_KEY = "mv_theme";
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>("dark");
-  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
-    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initial = stored ?? (prefersDark ? "dark" : "light");
+    const stored = localStorage.getItem(STORAGE_KEY);
+    const initial: Theme = stored === "light" || stored === "dark" ? stored : "dark";
     setTheme(initial);
     document.documentElement.dataset.theme = initial;
-    setReady(true);
   }, []);
 
   const toggleTheme = useCallback(() => {
@@ -40,10 +37,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       return next;
     });
   }, []);
-
-  if (!ready) {
-    return <div className="min-h-screen bg-[#050510]" />;
-  }
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>

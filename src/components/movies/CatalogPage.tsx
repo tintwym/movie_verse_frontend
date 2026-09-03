@@ -37,7 +37,13 @@ export async function CatalogPage({
           subtitle={subtitle}
           meta={`${data.total_results.toLocaleString()} titles · Page ${data.page} of ${Math.max(data.total_pages, 1)}`}
         />
-        <MovieGrid movies={data.results} mediaType={mediaType} />
+        {data.results.length > 0 ? (
+          <MovieGrid movies={data.results} mediaType={mediaType} />
+        ) : (
+          <p className="py-16 text-center text-zinc-400">
+            No titles loaded. Set TMDB_API_KEY on the host and refresh.
+          </p>
+        )}
         <Pagination
           currentPage={data.page}
           totalPages={Math.max(data.total_pages, 1)}

@@ -22,13 +22,13 @@ export function MobileTopBar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/5 bg-[#050510]/90 backdrop-blur-xl lg:hidden">
+    <header className="sticky top-0 z-50 border-b border-white/5 bg-background/90 backdrop-blur-xl lg:hidden">
       <div
         className="flex h-14 items-center justify-between gap-3 px-4"
         style={{ paddingTop: "env(safe-area-inset-top)" }}
       >
-        <Link href="/" className="flex items-center gap-2 font-bold text-white">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600">
+        <Link href="/" className="flex items-center gap-2 font-bold text-foreground">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 text-white">
             <Film className="h-4 w-4" />
           </div>
           <span className="text-base">

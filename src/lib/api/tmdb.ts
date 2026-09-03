@@ -26,7 +26,6 @@ const EMPTY_PEOPLE: PaginatedPeople = {
 };
 
 function getApiKey(): string {
-  // Prefer server-only key; fall back to public for local/dev convenience.
   return (
     process.env.TMDB_API_KEY?.trim() ||
     process.env.NEXT_PUBLIC_TMDB_API_KEY?.trim() ||
@@ -39,12 +38,18 @@ function hasApiKey(): boolean {
   return key.length > 0 && key !== "test_key" && key !== "your_tmdb_api_key";
 }
 
-function resolveBaseUrl(): string {
-  if (typeof window === "undefined") {
-    return TMDB_BASE;
+export function isTmdbConfigured(): boolean {
+  return hasApiKey();
+}
+
+function toQuery(params?: Record<string, string | number>): string {
+  const search = new URLSearchParams();
+  if (params) {
+    for (const [key, value] of Object.entries(params)) {
+      search.set(key, String(value));
+    }
   }
-  // Browser calls go through our proxy so the key stays on the server.
-  return "/api/tmdb";
+  return search.toString();
 }
 
 async function get<T>(
@@ -52,13 +57,23 @@ async function get<T>(
   params?: Record<string, string | number>
 ): Promise<T> {
   const onServer = typeof window === "undefined";
-  if (onServer && !hasApiKey()) {
-    throw new Error("TMDB API key is not configured");
+
+  if (onServer) {
+    if (!hasApiKey()) {
+      throw new Error("TMDB API key is not configured");
+    }
+    const search = new URLSearchParams(toQuery(params));
+    search.set("api_key", getApiKey());
+    const res = await fetch(`${TMDB_BASE}${url}?${search.toString()}`, {
+      next: { revalidate: 120 },
+    });
+    if (!res.ok) {
+      throw new Error(`TMDB ${url} failed (${res.status})`);
+    }
+    return (await res.json()) as T;
   }
 
-  const { data } = await axios.get<T>(`${resolveBaseUrl()}${url}`, {
-    params: onServer ? { api_key: getApiKey(), ...params } : { ...params },
-  });
+  const { data } = await axios.get<T>(`/api/tmdb${url}`, { params });
   return data;
 }
 
