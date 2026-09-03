@@ -15,6 +15,7 @@ export interface Movie {
   runtime?: number;
   tagline?: string;
   status?: string;
+  media_type?: "movie" | "tv" | string;
   number_of_seasons?: number;
   number_of_episodes?: number;
   seasons?: TvSeasonSummary[];
@@ -33,7 +34,7 @@ export interface MovieVideo {
 }
 
 export interface Genre {
-  id: number;
+  id: number | string;
   name: string;
 }
 

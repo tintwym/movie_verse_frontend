@@ -27,8 +27,11 @@ export default function RegisterPage() {
     }
     sessionStorage.setItem(
       "mv_register",
-      JSON.stringify({ username, email, password })
+      JSON.stringify({ username, email })
     );
+    // Keep password only in memory for this navigation hop via sessionStorage is worse;
+    // use a short-lived in-memory handoff on window.
+    (window as unknown as { __mv_reg_pw?: string }).__mv_reg_pw = password;
     router.push("/register/genres");
   };
 

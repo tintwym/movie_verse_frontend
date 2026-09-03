@@ -28,7 +28,17 @@ export default async function PersonPage({ params }: Props) {
 
   try {
     const person = await tmdbApi.getPerson(parseInt(id, 10));
-    const knownFor = person.combined_credits?.cast?.slice(0, 12) ?? [];
+    const knownFor = (person.combined_credits?.cast ?? [])
+      .slice(0, 12)
+      .map((item) => ({
+        ...item,
+        media_type:
+          item.media_type === "tv" || item.media_type === "movie"
+            ? item.media_type
+            : item.title || item.original_title
+              ? "movie"
+              : "tv",
+      }));
 
     return (
       <MainLayout>

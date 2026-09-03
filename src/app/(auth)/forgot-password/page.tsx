@@ -7,33 +7,55 @@ import { backendApi } from "@/lib/api/backend";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
+const PASSWORD_REGEX =
+  /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@#$%^&+=!]).{8,}$/;
+
 export default function ForgotPasswordPage() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [resetToken, setResetToken] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
   const verify = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     try {
-      await backendApi.auth.verifyUser(username, email);
+      const { data } = await backendApi.auth.verifyUser(username, email);
+      if (!data.resetToken) {
+        setError("If that account exists, check your details and try again.");
+        return;
+      }
+      setResetToken(data.resetToken);
       setStep(2);
     } catch {
-      setError("Invalid username or email");
+      setError("Could not start password reset. Try again.");
     }
   };
 
   const reset = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    if (!PASSWORD_REGEX.test(newPassword)) {
+      setError(
+        "Password needs uppercase, lowercase, number, and special character (8+ chars)."
+      );
+      return;
+    }
     try {
-      await backendApi.auth.resetPassword(username, email, newPassword);
+      await backendApi.auth.resetPasswordAuth(
+        username,
+        email,
+        newPassword,
+        resetToken
+      );
       setMessage("Password reset! Redirecting...");
       setTimeout(() => router.push("/login"), 1500);
     } catch {
-      setError("Reset failed");
+      setError("Reset failed. Token may be expired — start over.");
     }
   };
 
@@ -72,7 +94,7 @@ export default function ForgotPasswordPage() {
         {error && <p className="text-sm text-red-400">{error}</p>}
         {message && <p className="text-sm text-green-400">{message}</p>}
         <Button type="submit" className="w-full">
-          {step === 1 ? "Verify" : "Reset Password"}
+          {step === 1 ? "Continue" : "Reset Password"}
         </Button>
       </form>
 

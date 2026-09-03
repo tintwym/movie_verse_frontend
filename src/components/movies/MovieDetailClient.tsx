@@ -41,64 +41,89 @@ export function MovieDetailClient({ movie, cast, similar, mediaType = "movie" }:
   const [message, setMessage] = useState("");
   const [showTrailer, setShowTrailer] = useState(false);
   const [reviewRefresh, setReviewRefresh] = useState(0);
+  const [hasExistingReview, setHasExistingReview] = useState(false);
+  const isMovie = mediaType === "movie";
 
   useEffect(() => {
     recordRecentlyViewed(movie, mediaType);
   }, [movie, mediaType]);
 
   useEffect(() => {
-    if (!isLoggedIn) return;
-    backendApi.interactions.logView(movie.id).catch(() => {});
+    if (!isLoggedIn || !isMovie) return;
 
     Promise.all([
-      backendApi.interactions.getFavorites(),
-      backendApi.interactions.getWatched(),
-      backendApi.interactions.getWatchlist(),
+      backendApi.interactions.getFavorites().catch(() => ({ data: [] as number[] })),
+      backendApi.interactions.getWatched().catch(() => ({ data: [] as number[] })),
+      backendApi.interactions.getWatchlist().catch(() => ({ data: [] as number[] })),
       backendApi.ratings.getUserRating(movie.id).catch(() => null),
       backendApi.reviews.getUserReview(movie.id).catch(() => null),
-    ]).then(([favRes, watchRes, watchlistRes, ratingRes, reviewRes]) => {
-      setIsFavorite(favRes.data.includes(movie.id));
-      setIsWatched(watchRes.data.includes(movie.id));
-      setIsWatchlist(watchlistRes.data.includes(movie.id));
-      if (ratingRes?.data?.rating) setRating(ratingRes.data.rating);
-      if (reviewRes?.data) {
-        setReview(
-          reviewRes.data.editedReviewText ?? reviewRes.data.originalReviewText ?? ""
-        );
-      }
-    });
-  }, [isLoggedIn, movie.id]);
+    ])
+      .then(([favRes, watchRes, watchlistRes, ratingRes, reviewRes]) => {
+        setIsFavorite(favRes.data.includes(movie.id));
+        setIsWatched(watchRes.data.includes(movie.id));
+        setIsWatchlist(watchlistRes.data.includes(movie.id));
+        if (ratingRes?.data?.rating) setRating(ratingRes.data.rating);
+        if (reviewRes?.data) {
+          setHasExistingReview(
+            !!(reviewRes.data.editedReviewText || reviewRes.data.originalReviewText)
+          );
+          setReview(
+            reviewRes.data.editedReviewText ?? reviewRes.data.originalReviewText ?? ""
+          );
+        }
+      })
+      .catch(() => {});
+
+    backendApi.interactions.logView(movie.id).catch(() => {});
+  }, [isLoggedIn, movie.id, isMovie]);
 
   const toggleFavorite = async () => {
     if (!isLoggedIn) return setMessage("Please sign in first");
-    await backendApi.interactions.toggleFavorite(movie.id);
-    setIsFavorite(!isFavorite);
+    try {
+      await backendApi.interactions.toggleFavorite(movie.id);
+      setIsFavorite(!isFavorite);
+    } catch {
+      setMessage("Could not update favorite");
+    }
   };
 
   const toggleWatched = async () => {
     if (!isLoggedIn) return setMessage("Please sign in first");
-    if (isWatched) {
-      await backendApi.interactions.unmarkWatched(movie.id);
-    } else {
-      await backendApi.interactions.markWatched(movie.id);
+    try {
+      if (isWatched) {
+        await backendApi.interactions.unmarkWatched(movie.id);
+      } else {
+        await backendApi.interactions.markWatched(movie.id);
+      }
+      setIsWatched(!isWatched);
+    } catch {
+      setMessage("Could not update watched status");
     }
-    setIsWatched(!isWatched);
   };
 
   const toggleWatchlist = async () => {
     if (!isLoggedIn) return setMessage("Please sign in first");
-    await backendApi.interactions.toggleWatchlist(movie.id);
-    setIsWatchlist(!isWatchlist);
+    try {
+      await backendApi.interactions.toggleWatchlist(movie.id);
+      setIsWatchlist(!isWatchlist);
+    } catch {
+      setMessage("Could not update watchlist");
+    }
   };
 
   const submitReview = async () => {
     if (!isLoggedIn) return setMessage("Please sign in first");
-    if (rating > 0) await backendApi.ratings.submitRating(movie.id, rating);
-    if (review.trim()) {
-      await backendApi.reviews.submitReview(movie.id, review, false);
+    try {
+      if (rating > 0) await backendApi.ratings.submitRating(movie.id, rating);
+      if (review.trim()) {
+        await backendApi.reviews.submitReview(movie.id, review, hasExistingReview);
+        setHasExistingReview(true);
+      }
+      setMessage("Saved!");
+      setReviewRefresh((n) => n + 1);
+    } catch {
+      setMessage("Could not save review");
     }
-    setMessage("Saved!");
-    setReviewRefresh((n) => n + 1);
   };
 
   return (
@@ -196,7 +221,7 @@ export function MovieDetailClient({ movie, cast, similar, mediaType = "movie" }:
               )}
               <ShareButton title={title} />
               {mediaType === "movie" && <AddToListButton movieId={movie.id} />}
-              {isLoggedIn && (
+              {isLoggedIn && isMovie && (
                 <>
                   <Button
                     variant={isFavorite ? "danger" : "outline"}
@@ -221,7 +246,7 @@ export function MovieDetailClient({ movie, cast, similar, mediaType = "movie" }:
             </div>
             {message && <p className="text-sm text-indigo-400">{message}</p>}
 
-            {isLoggedIn && mediaType === "movie" && (
+            {isLoggedIn && isMovie && (
               <div className="glass-card max-w-xl space-y-4 p-6">
                 <h3 className="font-semibold text-white">Rate & Review</h3>
                 <div className="flex gap-2">

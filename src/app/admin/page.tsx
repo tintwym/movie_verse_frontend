@@ -54,9 +54,7 @@ export default function AdminPage() {
         <div className="mx-auto max-w-3xl space-y-4 px-4 py-16">
           <h1 className="text-2xl font-bold text-white">Admin</h1>
           <p className="text-zinc-400">
-            Admin access required. Sign in with an admin account (seeded as{" "}
-            <code className="text-indigo-300">admin</code> /{" "}
-            <code className="text-indigo-300">admin123</code>).
+            Admin access required. Sign in with an Admin-role account.
           </p>
           <Link href="/login">
             <Button>Sign In</Button>

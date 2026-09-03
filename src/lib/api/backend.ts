@@ -41,6 +41,7 @@ backend.interceptors.response.use(
       localStorage.removeItem("authToken");
       localStorage.removeItem("username");
       localStorage.removeItem("userRole");
+      window.dispatchEvent(new Event("mv:unauthorized"));
     }
     return Promise.reject(error);
   }
@@ -53,14 +54,35 @@ export const backendApi = {
     register: (payload: RegisterPayload) =>
       backend.post<AuthResponse>("/api/auth/users/register", payload),
     verifyUser: (username: string, email: string) =>
-      backend.post<string>("/api/auth/verify-user", { username, email }),
-    resetPassword: (username: string, email: string, newPassword: string) =>
+      backend.post<{ message: string; resetToken?: string }>(
+        "/api/auth/verify-user",
+        { username, email }
+      ),
+    resetPassword: (
+      username: string,
+      email: string,
+      newPassword: string,
+      resetToken: string
+    ) =>
       backend.post<string>("/api/users/reset-password", {
         username,
         email,
         newPassword,
+        resetToken,
       }),
-    getProfile: () => backend.get<UserProfile>("/api/auth/profile/me"),
+    // Prefer auth route as well
+    resetPasswordAuth: (
+      username: string,
+      email: string,
+      newPassword: string,
+      resetToken: string
+    ) =>
+      backend.post<string>("/api/auth/reset-password", {
+        username,
+        email,
+        newPassword,
+        resetToken,
+      }),    getProfile: () => backend.get<UserProfile>("/api/auth/profile/me"),
     changePassword: (currentPassword: string, newPassword: string) =>
       backend.post<string>("/api/users/change-password", {
         currentPassword,

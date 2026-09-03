@@ -34,11 +34,17 @@ export default function NotificationsPage() {
                 )
               )[0];
             if (!newest) return null;
+            const mediaType =
+              newest.media_type === "tv" || newest.media_type === "movie"
+                ? newest.media_type
+                : newest.title || newest.original_title
+                  ? "movie"
+                  : "tv";
             return {
               tmdbPersonId: f.tmdbPersonId,
               creditId: newest.id,
               title: movieTitle(newest),
-              mediaType: newest.title || newest.original_title ? "movie" : "tv",
+              mediaType,
               releaseDate: newest.release_date || newest.first_air_date,
             };
           } catch {
@@ -109,7 +115,7 @@ export default function NotificationsPage() {
             items.map((n) => (
               <li key={n.id}>
                 <Link
-                  href={n.linkUrl || "#"}
+                  href={n.linkUrl || "/notifications"}
                   onClick={() => {
                     if (!n.read) backendApi.notifications.markRead(n.id).then(load);
                   }}

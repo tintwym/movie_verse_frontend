@@ -18,6 +18,21 @@ interface UserMovieListContentProps {
   emptyCta?: { label: string; href: string };
 }
 
+async function resolveCatalogItem(id: number): Promise<Movie | null> {
+  try {
+    const movie = await tmdbApi.getMovie(id);
+    return { ...movie, media_type: "movie" };
+  } catch {
+    /* try TV */
+  }
+  try {
+    const show = await tmdbApi.getTV(id);
+    return { ...show, media_type: "tv" };
+  } catch {
+    return null;
+  }
+}
+
 function UserMovieListContent({
   title,
   subtitle,
@@ -43,10 +58,11 @@ function UserMovieListContent({
     fetchIds()
       .then(async (ids) => {
         if (cancelled) return;
-        const results = await Promise.all(
-          ids.map((id) => tmdbApi.getMovie(id).catch(() => null))
-        );
+        const results = await Promise.all(ids.map((id) => resolveCatalogItem(id)));
         setMovies(results.filter(Boolean) as Movie[]);
+      })
+      .catch(() => {
+        if (!cancelled) setMovies([]);
       })
       .finally(() => {
         if (!cancelled) setLoading(false);

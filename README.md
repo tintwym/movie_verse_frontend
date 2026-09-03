@@ -37,12 +37,14 @@ Open [http://localhost:3000](http://localhost:3000).
 2. In **Settings → Environment Variables**, add for Production (and Preview):
 
 ```
-NEXT_PUBLIC_TMDB_API_KEY=your_real_tmdb_key
+TMDB_API_KEY=your_real_tmdb_key
 NEXT_PUBLIC_BACKEND_URL=https://your-backend.onrender.com
 NEXT_PUBLIC_SITE_URL=https://your-app.vercel.app
 ```
 
-3. Redeploy. `NEXT_PUBLIC_*` vars are baked in at **build** time — set them before building.
+Prefer **`TMDB_API_KEY`** (server-only). The browser uses `/api/tmdb/*` so the key is not required in the client bundle. `NEXT_PUBLIC_TMDB_API_KEY` remains an optional local fallback.
+
+3. Redeploy. `NEXT_PUBLIC_*` vars are baked in at **build** time.
 
 Build should succeed even without the TMDB key (empty catalog). Without the key in env, the live site will show no movies.
 

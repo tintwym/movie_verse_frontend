@@ -32,7 +32,12 @@ export default function RegisterGenresPage() {
 
     setLoading(true);
     try {
-      const { username, email, password } = JSON.parse(draft);
+      const { username, email } = JSON.parse(draft);
+      const password = (window as unknown as { __mv_reg_pw?: string }).__mv_reg_pw;
+      if (!password) {
+        setError("Session expired. Please register again.");
+        return router.replace("/register");
+      }
       await backendApi.auth.register({
         username,
         email,
@@ -40,9 +45,11 @@ export default function RegisterGenresPage() {
         favoriteGenres: selected,
       });
       const { data } = await backendApi.auth.login({ username, password });
+      delete (window as unknown as { __mv_reg_pw?: string }).__mv_reg_pw;
       if (data.token) {
         localStorage.setItem("authToken", data.token);
         localStorage.setItem("username", username);
+        localStorage.setItem("userRole", data.role ?? "User");
         sessionStorage.removeItem("mv_register");
         refresh();
         router.push("/");

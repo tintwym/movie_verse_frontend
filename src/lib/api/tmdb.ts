@@ -26,7 +26,12 @@ const EMPTY_PEOPLE: PaginatedPeople = {
 };
 
 function getApiKey(): string {
-  return process.env.NEXT_PUBLIC_TMDB_API_KEY?.trim() ?? "";
+  // Prefer server-only key; fall back to public for local/dev convenience.
+  return (
+    process.env.TMDB_API_KEY?.trim() ||
+    process.env.NEXT_PUBLIC_TMDB_API_KEY?.trim() ||
+    ""
+  );
 }
 
 function hasApiKey(): boolean {
@@ -34,16 +39,25 @@ function hasApiKey(): boolean {
   return key.length > 0 && key !== "test_key" && key !== "your_tmdb_api_key";
 }
 
+function resolveBaseUrl(): string {
+  if (typeof window === "undefined") {
+    return TMDB_BASE;
+  }
+  // Browser calls go through our proxy so the key stays on the server.
+  return "/api/tmdb";
+}
+
 async function get<T>(
   url: string,
   params?: Record<string, string | number>
 ): Promise<T> {
-  if (!hasApiKey()) {
+  const onServer = typeof window === "undefined";
+  if (onServer && !hasApiKey()) {
     throw new Error("TMDB API key is not configured");
   }
 
-  const { data } = await axios.get<T>(`${TMDB_BASE}${url}`, {
-    params: { api_key: getApiKey(), ...params },
+  const { data } = await axios.get<T>(`${resolveBaseUrl()}${url}`, {
+    params: onServer ? { api_key: getApiKey(), ...params } : { ...params },
   });
   return data;
 }
@@ -149,7 +163,6 @@ export async function getRecommendedMovies(
     }
   };
 
-  // Prefer movies similar to titles the user already liked / watched.
   const similarSeeds = seedMovieIds.filter((id) => id > 0).slice(0, 3);
   if (similarSeeds.length > 0) {
     const similarBatches = await Promise.all(
@@ -179,7 +192,6 @@ export async function getRecommendedMovies(
     pushUnique(popular.results);
   }
 
-  // Light shuffle so repeats feel fresher across visits.
   for (let i = pooled.length - 1; i > 0; i -= 1) {
     const j = Math.floor(Math.random() * (i + 1));
     [pooled[i], pooled[j]] = [pooled[j], pooled[i]];

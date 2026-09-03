@@ -23,6 +23,12 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
+function clearAuthStorage() {
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("username");
+  localStorage.removeItem("userRole");
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [username, setUsername] = useState<string | null>(null);
   const [role, setRole] = useState<string | null>(null);
@@ -32,8 +38,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const token = localStorage.getItem("authToken");
     const storedUser = localStorage.getItem("username");
     const storedRole = localStorage.getItem("userRole");
-    setUsername(token ? storedUser : null);
-    setRole(token ? storedRole : null);
+    if (!token) {
+      setUsername(null);
+      setRole(null);
+      return;
+    }
+    setUsername(storedUser);
+    setRole(storedRole);
+  }, []);
+
+  useEffect(() => {
+    const onUnauthorized = () => {
+      clearAuthStorage();
+      setUsername(null);
+      setRole(null);
+    };
+    window.addEventListener("mv:unauthorized", onUnauthorized);
+    return () => window.removeEventListener("mv:unauthorized", onUnauthorized);
   }, []);
 
   useEffect(() => {
@@ -51,7 +72,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setUsername(res.data.username);
           }
         })
-        .catch(() => {})
+        .catch(() => {
+          clearAuthStorage();
+          setUsername(null);
+          setRole(null);
+        })
         .finally(() => setIsLoading(false));
     } else {
       setIsLoading(false);
@@ -70,9 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const logout = useCallback(() => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("username");
-    localStorage.removeItem("userRole");
+    clearAuthStorage();
     setUsername(null);
     setRole(null);
   }, []);
