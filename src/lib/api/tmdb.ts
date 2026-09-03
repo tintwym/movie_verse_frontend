@@ -26,9 +26,10 @@ const EMPTY_PEOPLE: PaginatedPeople = {
 };
 
 function getApiKey(): string {
+  const env = process.env;
   return (
-    process.env.TMDB_API_KEY?.trim() ||
-    process.env.NEXT_PUBLIC_TMDB_API_KEY?.trim() ||
+    env["TMDB_API_KEY"]?.trim() ||
+    env["NEXT_PUBLIC_TMDB_API_KEY"]?.trim() ||
     ""
   );
 }

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/contexts/ThemeProvider";
+import { AuthProvider } from "@/contexts/AuthProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -83,7 +84,9 @@ export default function RootLayout({
         />
       </head>
       <body className="flex min-h-full flex-col bg-mesh antialiased">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
