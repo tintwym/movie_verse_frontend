@@ -19,7 +19,7 @@ export function MovieRow({ title, movies, href, mediaType = "movie" }: MovieRowP
   return (
     <Reveal className="space-y-4">
       <div className="flex items-center justify-between px-4 sm:px-8">
-        <h2 className="text-lg font-bold tracking-tight text-white sm:text-2xl">
+        <h2 className="text-lg font-bold tracking-tight text-foreground sm:text-2xl">
           {title}
         </h2>
         {href && (

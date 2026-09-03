@@ -136,7 +136,7 @@ export function MovieDetailClient({ movie, cast, similar, mediaType = "movie" }:
         />
       )}
 
-      <section className="relative h-[50vh] min-h-[360px] overflow-hidden">
+      <section data-on-media className="relative h-[50vh] min-h-[360px] overflow-hidden">
         <Image
           src={backdropUrl(movie.backdrop_path ?? movie.poster_path)}
           alt={title}
@@ -181,7 +181,7 @@ export function MovieDetailClient({ movie, cast, similar, mediaType = "movie" }:
               <TruncateText
                 as="h1"
                 lines={2}
-                className="text-3xl font-bold text-white sm:line-clamp-3 sm:text-4xl"
+                className="text-3xl font-bold text-foreground sm:line-clamp-3 sm:text-4xl"
               >
                 {title}
               </TruncateText>
@@ -248,7 +248,7 @@ export function MovieDetailClient({ movie, cast, similar, mediaType = "movie" }:
 
             {isLoggedIn && isMovie && (
               <div className="glass-card max-w-xl space-y-4 p-6">
-                <h3 className="font-semibold text-white">Rate & Review</h3>
+                <h3 className="font-semibold text-foreground">Rate & Review</h3>
                 <div className="flex gap-2">
                   {[1, 2, 3, 4, 5].map((s) => (
                     <button
@@ -267,7 +267,7 @@ export function MovieDetailClient({ movie, cast, similar, mediaType = "movie" }:
                   onChange={(e) => setReview(e.target.value)}
                   placeholder="Write your review..."
                   rows={4}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 p-3 text-white placeholder:text-zinc-500 outline-none focus:border-indigo-500/50"
+                  className="w-full rounded-xl border border-white/10 bg-white/5 p-3 text-foreground placeholder:text-zinc-500 outline-none focus:border-indigo-500/50"
                 />
                 <Button onClick={submitReview}>Save Review</Button>
               </div>
@@ -277,7 +277,7 @@ export function MovieDetailClient({ movie, cast, similar, mediaType = "movie" }:
 
         {cast.length > 0 && (
           <Reveal className="mt-16">
-            <h2 className="mb-6 text-xl font-bold text-white">Top Cast</h2>
+            <h2 className="mb-6 text-xl font-bold text-foreground">Top Cast</h2>
             <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
               {cast.slice(0, 12).map((person, i) => (
                 <Reveal key={person.id} delay={i * 40} direction="none">
@@ -298,7 +298,7 @@ export function MovieDetailClient({ movie, cast, similar, mediaType = "movie" }:
                         sizes="112px"
                       />
                     </div>
-                    <p className="mt-2 text-sm font-medium text-white">{person.name}</p>
+                    <p className="mt-2 text-sm font-medium text-foreground">{person.name}</p>
                     <p className="text-xs text-zinc-500">{person.character}</p>
                   </Link>
                 </Reveal>

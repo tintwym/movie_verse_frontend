@@ -45,7 +45,7 @@ export default async function DiscoverPage({ searchParams }: Props) {
         </div>
 
         <div className="mt-12">
-          <h2 className="mb-6 text-xl font-semibold text-white">Popular Picks</h2>
+          <h2 className="mb-6 text-xl font-semibold text-foreground">Popular Picks</h2>
           <MovieGrid movies={discover.results} />
           <Pagination
             currentPage={discover.page}

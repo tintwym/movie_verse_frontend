@@ -47,7 +47,7 @@ export function MovieCard({ movie, className, priority, mediaType = "movie" }: M
         as="h3"
         lines={2}
         className={cn(
-          "mt-2 w-full text-xs font-medium text-zinc-200 transition-colors duration-200 group-hover:text-white sm:mt-3 sm:text-sm",
+          "mt-2 w-full text-xs font-medium text-foreground transition-colors duration-200 group-hover:text-indigo-500 sm:mt-3 sm:text-sm",
           className
         )}
       >

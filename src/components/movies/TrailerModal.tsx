@@ -24,6 +24,7 @@ export function TrailerModal({ youtubeKey, title, onClose }: Props) {
 
   return (
     <div
+      data-on-media
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
       onClick={onClose}
       role="dialog"

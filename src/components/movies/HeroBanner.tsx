@@ -18,7 +18,7 @@ export function HeroBanner({ movie }: HeroBannerProps) {
   const title = movieTitle(movie);
 
   return (
-    <section className="relative h-[52vh] min-h-[320px] w-full overflow-hidden sm:h-[62vh] sm:min-h-[420px] lg:h-[70vh] lg:min-h-[480px]">
+    <section data-on-media className="relative h-[52vh] min-h-[320px] w-full overflow-hidden sm:h-[62vh] sm:min-h-[420px] lg:h-[70vh] lg:min-h-[480px]">
       <div className="absolute inset-0 overflow-hidden">
         <Image
           src={backdropUrl(movie.backdrop_path ?? movie.poster_path)}

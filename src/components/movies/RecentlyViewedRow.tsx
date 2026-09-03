@@ -15,7 +15,7 @@ export function RecentlyViewedRow() {
       <div className="mx-auto max-w-7xl">
         <div className="mb-4 flex items-end justify-between">
           <div>
-            <h2 className="text-xl font-bold text-white sm:text-2xl">Continue Browsing</h2>
+            <h2 className="text-xl font-bold text-foreground sm:text-2xl">Continue Browsing</h2>
             <p className="mt-1 text-sm text-zinc-500">Recently viewed titles</p>
           </div>
         </div>
@@ -35,7 +35,7 @@ export function RecentlyViewedRow() {
                   sizes="140px"
                 />
               </div>
-              <p className="mt-2 line-clamp-2 text-sm font-medium text-zinc-200 group-hover:text-white">
+              <p className="mt-2 line-clamp-2 text-sm font-medium text-foreground group-hover:text-indigo-500">
                 {item.title}
               </p>
             </Link>

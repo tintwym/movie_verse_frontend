@@ -59,6 +59,39 @@ body {
   color: #64748b;
 }
 
+/* Page titles/body copy that still use text-white */
+[data-theme="light"] h1.text-white,
+[data-theme="light"] h2.text-white,
+[data-theme="light"] h3.text-white,
+[data-theme="light"] p.text-white,
+[data-theme="light"] span.text-white,
+[data-theme="light"] td.text-white,
+[data-theme="light"] label.text-white,
+[data-theme="light"] a.text-white,
+[data-theme="light"] input.text-white,
+[data-theme="light"] textarea.text-white {
+  color: var(--foreground);
+}
+
+/* Keep white text on dark cinematic / colored surfaces */
+[data-theme="light"] [data-on-media] .text-white,
+[data-theme="light"] [data-on-media].text-white,
+[data-theme="light"] [data-on-media] h1,
+[data-theme="light"] [data-on-media] h2,
+[data-theme="light"] [data-on-media] h3,
+[data-theme="light"] [data-on-media] p,
+[data-theme="light"] .from-indigo-500.text-white,
+[data-theme="light"] .to-violet-600.text-white,
+[data-theme="light"] .from-indigo-500 .text-white,
+[data-theme="light"] .to-violet-600 .text-white,
+[data-theme="light"] .bg-indigo-500.text-white,
+[data-theme="light"] .bg-indigo-500 .text-white,
+[data-theme="light"] .bg-red-600\/90.text-white,
+[data-theme="light"] .bg-zinc-900\/95 .text-white,
+[data-theme="light"] .bg-zinc-900\/95 .text-zinc-300 {
+  color: #ffffff;
+}
+
 [data-theme="light"] .border-white\/5,
 [data-theme="light"] .border-white\/10,
 [data-theme="light"] .border-white\/20 {
