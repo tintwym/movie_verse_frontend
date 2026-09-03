@@ -32,7 +32,9 @@ export const metadata: Metadata = {
   description:
     "Browse trending movies, get personalized recommendations, and manage your watchlist with MovieVerse.",
   applicationName: "MovieVerse",
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000"
+  ),
   openGraph: {
     type: "website",
     siteName: "MovieVerse",
