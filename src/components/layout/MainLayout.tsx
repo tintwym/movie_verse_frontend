@@ -1,0 +1,21 @@
+import { DesktopNavbar } from "@/components/layout/DesktopNavbar";
+import { MobileTopBar } from "@/components/layout/MobileTopBar";
+import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
+import { Footer } from "@/components/layout/Footer";
+import { AuthProvider } from "@/contexts/AuthProvider";
+
+export function MainLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <AuthProvider>
+      <DesktopNavbar />
+      <MobileTopBar />
+      <main className="flex-1 pb-[calc(4.75rem+env(safe-area-inset-bottom,0px))] lg:pb-0">
+        {children}
+      </main>
+      <MobileBottomNav />
+      <div className="hidden lg:block">
+        <Footer />
+      </div>
+    </AuthProvider>
+  );
+}

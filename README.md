@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MovieVerse Web
+
+Modern **Next.js 16 + React 19 + TypeScript** frontend for MovieVerse with a renewed cinematic UI.
+
+## Tech Stack
+
+- **Framework:** Next.js 16 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS v4
+- **Icons:** Lucide React
+- **API:** TMDB + Spring Boot backend
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+cp .env.example .env.local
+# Set NEXT_PUBLIC_TMDB_API_KEY and NEXT_PUBLIC_BACKEND_URL
+
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_BACKEND_URL` | Spring Boot API (default `http://localhost:8080`) |
+| `NEXT_PUBLIC_TMDB_API_KEY` | TMDB API key |
+| `NEXT_PUBLIC_TMDB_TOKEN` | TMDB bearer token (optional) |
 
-## Learn More
+## Features
 
-To learn more about Next.js, take a look at the following resources:
+- Hero banner with featured movie
+- Browse: trending, popular, top rated, upcoming, discover
+- Movie detail with favorites, watched, reviews, ratings
+- Search movies & browse people
+- Auth: login, register with genre selection, forgot password
+- Personalized recommendations by genre
+- Profile with stats
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run dev      # Development server
+npm run build    # Production build
+npm run start    # Production server
+npm run lint     # ESLint
+```
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+ISS GDipSA 50 Team 8
